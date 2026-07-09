@@ -1,0 +1,33 @@
+$kind: http-example
+request:
+  url: http://localhost:5008/api/Customer/Register
+  method: POST
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: "{\r
+
+      \    \"fullName\": \"Vignesh\",\r
+
+      \    \"email\": \"vigneshk@gmail.com\",\r
+
+      \    \"password\": \"123456\",\r
+
+      \    \"confirmPassword\": \"123456\",\r
+
+      \    \"phoneNumber\": 9876543210\r
+
+      }"
+response:
+  statusCode: 400
+  statusText: Bad Request
+  headers:
+    content-length: "0"
+    connection: close
+    date: Thu, 09 Jul 2026 09:26:13 GMT
+    server: Kestrel
+  body:
+    type: text
+    content: ""
+order: 1783589189271
