@@ -17,6 +17,6 @@ namespace MovieBookingBackend.Movie
 
         public DateTime ReleaseDate { get; set; }
 
-        public string Status { get; set; } = string.Empty;
+        public string Status { get; set; } = "Active";
     }
 }

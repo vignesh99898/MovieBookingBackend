@@ -16,7 +16,5 @@ namespace MovieBookingBackend.Movie
         [Required]
         public DateTime ReleaseDate { get; set; }
 
-        [Required]
-        public string Status { get; set; } = string.Empty;
     }
 }

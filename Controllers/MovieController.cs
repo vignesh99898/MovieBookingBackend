@@ -15,12 +15,25 @@ namespace MovieBookingBackend.Controllers
             _context = context;
         }
 
-        [HttpPost("AddMovie")]
-        public IActionResult AddMovie([FromBody] MovieAdd request)
+        [HttpPost("AddMovie"    )]
+        public IActionResult AddMovie(string adminEmail, [FromBody] MovieAdd request)
         {
+            // Check whether the user is an Admin
+            var admin = _context.CustomerDetails
+                                .FirstOrDefault(x => x.Email == adminEmail);
+
+            if (admin == null || admin.Role != "Admin")
+            {
+                return Unauthorized(new
+                {
+                    Status = "Error",
+                    Message = "Only Admin can add movies."
+                });
+            }
+
             // Check if the movie already exists
             var existingMovie = _context.MovieDetails
-                                        .FirstOrDefault(x => x.MovieName == request.MovieName);
+                                .FirstOrDefault(x => x.MovieName == request.MovieName);
 
             if (existingMovie != null)
             {
@@ -38,7 +51,6 @@ namespace MovieBookingBackend.Controllers
                 Language = request.Language,
                 Duration = request.Duration,
                 ReleaseDate = request.ReleaseDate,
-                Status = request.Status
             };
 
             try
@@ -61,6 +73,43 @@ namespace MovieBookingBackend.Controllers
                     Error = ex.Message
                 });
             }
+        
+        }
+        [HttpDelete("DeleteMovie")]
+        public IActionResult DeleteMovie(string adminEmail, string movieName)
+        {
+            var admin = _context.CustomerDetails
+                .FirstOrDefault(x => x.Email == adminEmail);
+
+            if (admin == null || admin.Role != "Admin")
+            {
+                return Unauthorized(new
+                {
+                    Status = "Error",
+                    Message = "Only Admin can delete movies."
+                });
+            }
+
+            var movie = _context.MovieDetails
+                .FirstOrDefault(x => x.MovieName == movieName);
+
+            if (movie == null)
+            {
+                return NotFound(new
+                {
+                    Status = "Error",
+                    Message = "Movie not found."
+                });
+            }
+
+            _context.MovieDetails.Remove(movie);
+            _context.SaveChanges();
+
+            return Ok(new
+            {
+                Status = "Success",
+                Message = "Movie deleted successfully."
+            });
         }
     }
 }

@@ -16,5 +16,6 @@ namespace MovieBookingBackend.Customer
         public string Password { get; set; }
 
         public long PhoneNumber { get; set; }
+        public string Role { get; set; } = "User";
     }
 }
