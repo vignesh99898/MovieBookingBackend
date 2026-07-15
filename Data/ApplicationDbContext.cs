@@ -5,6 +5,8 @@ using MovieBookingBackend.Theatre;
 using MovieBookingBackend.Screen;
 using MovieBookingBackend.Seat;
 using MovieBookingBackend.MovieSchedule;
+using MovieBookingBackend.ShowTime;
+using MovieBookingBackend.Booking;
 
 namespace MovieBookingBackend.Data
 {
@@ -21,5 +23,8 @@ namespace MovieBookingBackend.Data
         public DbSet<ScreenDetails> ScreenDetails { get; set; }
         public DbSet<SeatDetails> SeatDetails { get; set; }
         public DbSet<MovieScheduleDetails> MovieScheduleDetails { get; set; }
+        public DbSet<ShowTime.ShowTimeDetails> ShowTimeDetails { get; set; }
+        public DbSet<Booking.BookingDetails> BookingDetails { get; set; }
+        public DbSet<Booking.BookingSeatDetails> BookingSeatDetails { get; set; }
     }
 }
