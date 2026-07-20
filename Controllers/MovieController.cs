@@ -111,5 +111,42 @@ namespace MovieBookingBackend.Controllers
                 Message = "Movie deleted successfully."
             });
         }
+        [HttpPut("UpdateMoviePrice")]
+        public IActionResult UpdateMoviePrice([FromBody] UpdateMoviePriceRequest request)
+        {
+            try
+            {
+                var movie = _context.MovieDetails
+                    .FirstOrDefault(m => m.MovieName == request.MovieName);
+
+                if (movie == null)
+                {
+                    return NotFound(new
+                    {
+                        Status = "Error",
+                        Message = "Movie not found."
+                    });
+                }
+
+                movie.TicketPrice = request.TicketPrice;
+
+                _context.SaveChanges();
+
+                return Ok(new
+                {
+                    Status = "Success",
+                    Message = "Movie ticket price updated successfully."
+                });
+            }
+            catch (Exception ex)
+
+            {
+                return BadRequest(new
+                {
+                    Status = "Error",
+                    Message = ex.Message
+                });
+            }
+        }   
     }
 }

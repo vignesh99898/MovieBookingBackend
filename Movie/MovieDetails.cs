@@ -18,5 +18,9 @@ namespace MovieBookingBackend.Movie
         public DateTime ReleaseDate { get; set; }
 
         public string Status { get; set; } = "Active";
+
+        [Required]
+        [Column(TypeName = "decimal(10,2)")]
+        public decimal TicketPrice { get; set; } = 100;
     }
 }
