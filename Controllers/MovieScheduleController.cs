@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using MovieBookingBackend.Data;
 using MovieBookingBackend.Movie;
 using MovieBookingBackend.MovieSchedule;
@@ -9,6 +10,7 @@ namespace MovieBookingBackend.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize(Roles = "Admin")]
     public class MovieScheduleController : ControllerBase
     {
         private readonly ApplicationDbContext _context;

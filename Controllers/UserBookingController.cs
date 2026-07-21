@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using MovieBookingBackend.Data;
 using MovieBookingBackend.Booking;
 using MovieBookingBackend.Movie;
@@ -20,6 +21,7 @@ namespace MovieBookingBackend.Controllers
             _context = context;
         }
         // Book Tickets
+        [Authorize(Roles = "User")]
         [HttpPost("BookTickets")]
         public IActionResult BookTickets([FromBody] BookingRequest request)
         {
@@ -211,6 +213,7 @@ namespace MovieBookingBackend.Controllers
         }
 
         // Booking History
+        [Authorize(Roles = "User")]
         [HttpGet("GetBookingHistory")]
         public IActionResult GetBookingHistory(int userId)
         {
@@ -244,6 +247,7 @@ namespace MovieBookingBackend.Controllers
             }
         }
         // Booking Details
+        [Authorize(Roles = "User")]
         [HttpGet("GetBookingDetails")]
         public IActionResult GetBookingDetails(int bookingId)
         {
@@ -332,6 +336,7 @@ namespace MovieBookingBackend.Controllers
             }
         }
         // Cancel Booking
+        [Authorize(Roles = "User")]
         [HttpPut("CancelTicket")]
         public IActionResult CancelTicket(int bookingId)
         {

@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using MovieBookingBackend.Data;
 using MovieBookingBackend.Screen;
 using MovieBookingBackend.Theatre;
@@ -16,6 +17,7 @@ namespace MovieBookingBackend.Controllers
             _context = context;
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost("AddScreen")]
         public IActionResult AddScreen([FromBody] ScreenAdd request)
         {
@@ -76,6 +78,8 @@ namespace MovieBookingBackend.Controllers
                 });
             }
         }
+
+        [Authorize(Roles = "Admin")]
         [HttpGet("GetScreensByTheatre")]
         public IActionResult GetScreensByTheatre(string theatreName)
         {

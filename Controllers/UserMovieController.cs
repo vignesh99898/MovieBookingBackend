@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using MovieBookingBackend.Data;
 
 namespace MovieBookingBackend.Controllers
@@ -14,6 +15,7 @@ namespace MovieBookingBackend.Controllers
             _context = context;
         }
 
+        [AllowAnonymous]
         [HttpGet("GetActiveMovies")]
         public IActionResult GetActiveMovies()
         {

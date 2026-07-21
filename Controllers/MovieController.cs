@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using MovieBookingBackend.Data;
 using MovieBookingBackend.Movie;
 
@@ -14,8 +15,9 @@ namespace MovieBookingBackend.Controllers
         {
             _context = context;
         }
-
-        [HttpPost("AddMovie"    )]
+        
+        [Authorize(Roles = "Admin")]
+        [HttpPost("AddMovie")]
         public IActionResult AddMovie(string adminEmail, [FromBody] MovieAdd request)
         {
             // Check whether the user is an Admin
@@ -75,6 +77,8 @@ namespace MovieBookingBackend.Controllers
             }
         
         }
+
+        [Authorize(Roles = "Admin")]
         [HttpDelete("DeleteMovie")]
         public IActionResult DeleteMovie(string adminEmail, string movieName)
         {
@@ -111,6 +115,8 @@ namespace MovieBookingBackend.Controllers
                 Message = "Movie deleted successfully."
             });
         }
+
+        [Authorize(Roles = "Admin")]
         [HttpPut("UpdateMoviePrice")]
         public IActionResult UpdateMoviePrice([FromBody] UpdateMoviePriceRequest request)
         {

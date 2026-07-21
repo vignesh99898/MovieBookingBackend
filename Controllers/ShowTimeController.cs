@@ -149,5 +149,43 @@ namespace MovieBookingBackend.Controllers
                 TotalShowsCreated = showList.Count
             });
         }
+        [HttpGet("GetAvailableShows")]
+        public IActionResult GetAvailableShows()
+        {
+            DateTime today = DateTime.Today;
+            TimeSpan currentTime = DateTime.Now.TimeOfDay;
+
+            var shows = _context.ShowTimeDetails
+                .Where(s =>
+                    s.ShowDate.Date > today.Date ||
+                    (s.ShowDate.Date == today.Date &&
+                     s.StartTime >= currentTime))
+                .Select(s => new
+                {
+                    s.ShowId,
+                    s.ScheduleId,
+                    s.ScreenId,
+                    s.ShowDate,
+                    s.StartTime,
+                    s.EndTime,
+                    s.AvailableSeats
+                })
+                .ToList();
+
+            if (!shows.Any())
+            {
+                return NotFound(new
+                {
+                    Status = "Error",
+                    Message = "No upcoming shows available."
+                });
+            }
+
+            return Ok(new
+            {
+                Status = "Success",
+                Data = shows
+            });
+        }
     }
 } 

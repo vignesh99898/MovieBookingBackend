@@ -132,3 +132,14 @@ C:\Users\kanap\Documents\Prama\MovieBookingBackend\obj\Debug\net9.0\refint\Movie
 C:\Users\kanap\Documents\Prama\MovieBookingBackend\obj\Debug\net9.0\MovieBookingBackend.pdb
 C:\Users\kanap\Documents\Prama\MovieBookingBackend\obj\Debug\net9.0\MovieBookingBackend.genruntimeconfig.cache
 C:\Users\kanap\Documents\Prama\MovieBookingBackend\obj\Debug\net9.0\ref\MovieBookingBackend.dll
+C:\Users\kanap\Documents\Prama\MovieBookingBackend\bin\Debug\net9.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\Users\kanap\Documents\Prama\MovieBookingBackend\bin\Debug\net9.0\Microsoft.IdentityModel.Abstractions.dll
+C:\Users\kanap\Documents\Prama\MovieBookingBackend\bin\Debug\net9.0\Microsoft.IdentityModel.JsonWebTokens.dll
+C:\Users\kanap\Documents\Prama\MovieBookingBackend\bin\Debug\net9.0\Microsoft.IdentityModel.Logging.dll
+C:\Users\kanap\Documents\Prama\MovieBookingBackend\bin\Debug\net9.0\Microsoft.IdentityModel.Protocols.dll
+C:\Users\kanap\Documents\Prama\MovieBookingBackend\bin\Debug\net9.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+C:\Users\kanap\Documents\Prama\MovieBookingBackend\bin\Debug\net9.0\Microsoft.IdentityModel.Tokens.dll
+C:\Users\kanap\Documents\Prama\MovieBookingBackend\bin\Debug\net9.0\System.IdentityModel.Tokens.Jwt.dll
+C:\Users\kanap\Documents\Prama\MovieBookingBackend\bin\Debug\net9.0\BouncyCastle.Cryptography.dll
+C:\Users\kanap\Documents\Prama\MovieBookingBackend\bin\Debug\net9.0\MailKit.dll
+C:\Users\kanap\Documents\Prama\MovieBookingBackend\bin\Debug\net9.0\MimeKit.dll

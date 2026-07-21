@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using MovieBookingBackend.Data;
 using MovieBookingBackend.Models;
 using MovieBookingBackend.Seat;
@@ -16,6 +17,7 @@ namespace MovieBookingBackend.Controllers
             _context = context;
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost("GenerateSeats")]
         public IActionResult GenerateSeats([FromBody] SeatGenerateRequest request)
         {
@@ -59,6 +61,8 @@ namespace MovieBookingBackend.Controllers
                 TotalSeats = seats.Count
             });
         }
+
+        [Authorize(Roles = "Admin")]
         [HttpPut("UpdateSeatType")]
         public IActionResult UpdateSeatType([FromBody] UpdateSeatTypeRequest request)
         {

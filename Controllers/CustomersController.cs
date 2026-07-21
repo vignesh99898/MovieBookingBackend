@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using MovieBookingBackend.Customer;
 using MovieBookingBackend.Data;
+using MovieBookingBackend.Services;
+using Microsoft.AspNetCore.Identity;
 
 namespace MovieBookingBackend.Controllers
 {
@@ -9,10 +11,14 @@ namespace MovieBookingBackend.Controllers
     public class CustomerController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
+        private readonly JwtService _jwtService;
+        private readonly PasswordHasher<CustomerDetails> _passwordHasher;
 
-        public CustomerController(ApplicationDbContext context)
+        public CustomerController(ApplicationDbContext context, JwtService jwtService)
         {
             _context = context;
+            _jwtService = jwtService;
+            _passwordHasher = new PasswordHasher<CustomerDetails>();
         }
 
         [HttpPost("Register")]
@@ -46,9 +52,12 @@ namespace MovieBookingBackend.Controllers
             {
                 FullName = request.FullName,
                 Email = request.Email,
-                Password = request.Password,
-                PhoneNumber = request.PhoneNumber
+                PhoneNumber = request.PhoneNumber,
+                Role = "User"
             };
+
+            // Hash the password
+            customer.Password = _passwordHasher.HashPassword(customer, request.Password);
 
             try
             {
@@ -67,45 +76,98 @@ namespace MovieBookingBackend.Controllers
                 {
                     Status = "Error",
                     Message = "Registration failed.",
-                    Error = ex.Message
+                    Error = ex.InnerException?.Message ?? ex.Message
                 });
             }
         }
-        
 
-   
         [HttpPost("Login")]
         public IActionResult Login([FromBody] CustomerLogin request)
         {
-       // Search for a customer with the given email and password
-            var customer = _context.CustomerDetails
-                                   .FirstOrDefault(x =>
-                                       x.Email == request.Email &&
-                                       x.Password == request.Password);
-
-            // Customer not found
-            if (customer == null)
+            try
             {
-                return BadRequest(new
+                // Check if request is null
+                if (request == null)
                 {
-                    Status = "Error",
-                    Message = "Invalid Email or Password."
+                    return BadRequest(new
+                    {
+                        Status = "Error",
+                        Message = "Invalid Request."
+                    });
+                }
+
+                // Check whether email and password are provided
+                if (string.IsNullOrWhiteSpace(request.Email) ||
+                    string.IsNullOrWhiteSpace(request.Password))
+                {
+                    return BadRequest(new
+                    {
+                        Status = "Error",
+                        Message = "Email and Password are required."
+                    });
+                }
+
+                // Find customer by email
+                var customer = _context.CustomerDetails
+                                       .FirstOrDefault(x => x.Email == request.Email);
+
+                // Customer not found
+                if (customer == null)
+                {
+                    return BadRequest(new
+                    {
+                        Status = "Error",
+                        Message = "Invalid Email."
+                    });
+                }
+
+                // Verify the hashed password
+                var result = _passwordHasher.VerifyHashedPassword(
+                    customer,
+                    customer.Password,
+                    request.Password
+                );
+
+                if (result == PasswordVerificationResult.Failed)
+                {
+                    return BadRequest(new
+                    {
+                        Status = "Error",
+                        Message = "Invalid Password."
+                    });
+                }
+                // Generate JWT Token
+                string token = _jwtService.GenerateToken(
+                    customer.UserId,
+                    customer.Email,
+                    customer.Role
+                );
+
+                // Return success response
+                return Ok(new
+                {
+                    Status = "Success",
+                    Message = "Login Successful.",
+                    Token = token,
+                    User = new
+                    {
+                        customer.UserId,
+                        customer.FullName,
+                        customer.Email,
+                        customer.PhoneNumber,
+                        customer.Role
+                    }
                 });
             }
-
-            // Customer found
-            return Ok(new
+            catch (Exception ex)
             {
-                Status = "Success",
-                Message = "Login Successful.",
-                User = new
+                return StatusCode(500, new
                 {
-                    customer.UserId,
-                    customer.FullName,
-                    customer.Email,
-                    customer.PhoneNumber
-                }
-            });
+                    Status = "Error",
+                    Message = "Login Failed.",
+                    Error = ex.Message
+                });
+            }
         }
     }
 }

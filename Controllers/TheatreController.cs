@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using MovieBookingBackend.Data;
 using MovieBookingBackend.Theatre;
 
@@ -15,6 +16,7 @@ namespace MovieBookingBackend.Controllers
             _context = context;
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost("AddTheatre")]
         public IActionResult AddTheatre([FromBody] TheatreAdd request)
         {
@@ -59,6 +61,8 @@ namespace MovieBookingBackend.Controllers
                 });
             }
         }
+
+        [Authorize(Roles = "Admin")]
         [HttpPut("InactiveTheatre")]
         public IActionResult InactiveTheatre(string theatreName)
         {
@@ -106,6 +110,7 @@ namespace MovieBookingBackend.Controllers
                 });
             }
         }
+        [Authorize(Roles = "Admin")]
         [HttpPut("ActiveTheatre")]
         public IActionResult ActiveTheatre(string theatreName)
         {
@@ -140,6 +145,8 @@ namespace MovieBookingBackend.Controllers
                 Message = "Theatre status updated to Active successfully."
             });
         }
+
+        [Authorize(Roles = "Admin")]
         [HttpDelete("DeleteTheatre")]
         public IActionResult DeleteTheatre(string theatreName)
         {
@@ -177,6 +184,8 @@ namespace MovieBookingBackend.Controllers
                 });
             }
         }
+
+        [Authorize(Roles = "Admin")]
         [HttpGet("GetInactiveTheatres")]
         public IActionResult GetInactiveTheatres()
         {
@@ -208,6 +217,8 @@ namespace MovieBookingBackend.Controllers
                 Data = theatres
             });
         }
+
+        [Authorize(Roles = "Admin")]
         [HttpGet("GetActiveTheatres")]
         public IActionResult GetActiveTheatres()
         {

@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using MovieBookingBackend.Data;
 using MovieBookingBackend.Movie;
 using MovieBookingBackend.MovieSchedule;
@@ -21,6 +22,7 @@ namespace MovieBookingBackend.Controllers
             _context = context;
         }
 
+        [AllowAnonymous]
         [HttpGet("GetAvailableSeats")]
         public IActionResult GetAvailableSeats(
             string movieName,
