@@ -26,5 +26,6 @@ namespace MovieBookingBackend.Data
         public DbSet<ShowTime.ShowTimeDetails> ShowTimeDetails { get; set; }
         public DbSet<Booking.BookingDetails> BookingDetails { get; set; }
         public DbSet<Booking.BookingSeatDetails> BookingSeatDetails { get; set; }
+        public DbSet<Feedback.FeedbackDetails> FeedbackDetails { get; set; }
     }
 }

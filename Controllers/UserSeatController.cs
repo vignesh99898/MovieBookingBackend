@@ -120,7 +120,10 @@ namespace MovieBookingBackend.Controllers
                     {
                         s.SeatId,
                         s.SeatNumber,
-                        s.SeatType
+                        s.SeatType,
+                        Status = bookedSeatIds.Contains(s.SeatId)
+                                    ? "Booked"
+                                    : "Available"
                     })
                     .OrderBy(s => s.SeatNumber)
                     .ToList();

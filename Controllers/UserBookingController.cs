@@ -7,21 +7,27 @@ using MovieBookingBackend.MovieSchedule;
 using MovieBookingBackend.ShowTime;
 using MovieBookingBackend.Theatre;
 using MovieBookingBackend.Seat;
+using MovieBookingBackend.Services;
+using MovieBookingBackend.Customer;
 
 namespace MovieBookingBackend.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class UserBookingController : ControllerBase
+    public class BookingController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
+        private readonly EmailService _emailService;
 
-        public UserBookingController(ApplicationDbContext context)
+        public BookingController(
+            ApplicationDbContext context,
+            EmailService emailService)
         {
             _context = context;
+            _emailService = emailService;
         }
         // Book Tickets
-        [Authorize(Roles = "User")]
+        [AllowAnonymous]
         [HttpPost("BookTickets")]
         public IActionResult BookTickets([FromBody] BookingRequest request)
         {
@@ -195,10 +201,44 @@ namespace MovieBookingBackend.Controllers
                 }
 
                 _context.SaveChanges();
+
+                // Find Customer
+                var customer = _context.CustomerDetails
+                    .FirstOrDefault(c => c.UserId == booking.UserId);
+
+                if (customer == null)
+                {
+                    return NotFound(new
+                    {
+                        Status = "Error",
+                        Message = "Customer not found."
+                    });
+                }
+
+                // Prepare Seat Numbers
+                List<string> seatNumbers = selectedSeats
+                    .Select(s => s.SeatNumber)
+                    .ToList();
+
+                // Send Email
+                _emailService.SendBookingConfirmation(
+                    customer.Email,
+                    customer.FullName,
+                    movie.MovieName,
+                    theatre.TheatreName,
+                    show.ShowDate,
+                    show.StartTime,
+                    seatNumbers,
+                    totalAmount,
+                    booking.BookingId
+                );
+
+                // Return Success
                 return Ok(new
                 {
                     Status = "Success",
-                    Message = "Seat validation completed successfully.",
+                    Message = "Booking Successful. Confirmation Email Sent.",
+                    BookingId = booking.BookingId,
                     TotalAmount = totalAmount
                 });
             }
@@ -209,7 +249,7 @@ namespace MovieBookingBackend.Controllers
                     Status = "Error",
                     Message = ex.Message
                 });     
-            }   
+            }
         }
 
         // Booking History
@@ -247,7 +287,7 @@ namespace MovieBookingBackend.Controllers
             }
         }
         // Booking Details
-        [Authorize(Roles = "User")]
+        [AllowAnonymous]
         [HttpGet("GetBookingDetails")]
         public IActionResult GetBookingDetails(int bookingId)
         {
@@ -336,7 +376,7 @@ namespace MovieBookingBackend.Controllers
             }
         }
         // Cancel Booking
-        [Authorize(Roles = "User")]
+        [AllowAnonymous]
         [HttpPut("CancelTicket")]
         public IActionResult CancelTicket(int bookingId)
         {
